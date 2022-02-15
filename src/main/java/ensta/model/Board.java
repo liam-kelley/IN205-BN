@@ -40,6 +40,8 @@ public class Board implements IBoard { //IBoard c'est l'interface
 		initBoards(DEFAULT_SIZE);
 	}
 
+	public int getSize() { return(this.size);}
+
 	public void print() { //à compléter
 		
 		System.out.print("Navires :");
@@ -64,16 +66,16 @@ public class Board implements IBoard { //IBoard c'est l'interface
 		}
 		System.out.println("");
 
-		for(int i = 0; i<this.size + 0; i++){
-			if(i+1<10){System.out.print((i+1) + "  ");}
-			else{System.out.print((i+1) + " ");}
-			for(int j = 0; j<this.size; j++){
+		for(int j = 0; j<this.size + 0; j++){
+			if(j+1<10){System.out.print((j+1) + "  ");}
+			else{System.out.print((j+1) + " ");}
+			for(int i = 0; i<this.size; i++){
 				System.out.print(navires[i][j] + " ");
 			}
-			if(i+1<10){System.out.print("  ");}
+			if(j+1<10){System.out.print("  ");}
 			else{System.out.print(" ");}
-			System.out.print((i+1) + "  ");
-			for(int j = 0; j<this.size; j++){
+			System.out.print((j+1) + "  ");
+			for(int i = 0; i<this.size; i++){
 				if(frappes[i][j] == false){
 					System.out.print(". ");
 				}
@@ -83,17 +85,28 @@ public class Board implements IBoard { //IBoard c'est l'interface
 		}
 	}
 
-	public int getSize() { //à compléter
-		return(1);
+
+	public boolean putShip(AbstractShip ship, Coords coords){
+		if(canPutShip(ship, coords)){
+			Orientation o = ship.getOrientation();
+			int dx = 0, dy = 0;
+			if (o == Orientation.EAST) { dx = 1;}
+			else if (o == Orientation.SOUTH){ dy = 1; }
+			else if (o == Orientation.NORTH) { dy = -1;}
+			else if (o == Orientation.WEST) { dx = -1; }
+
+			Coords iCoords = new Coords(coords);
+			for (int i = 0; i < ship.getLength(); ++i) {
+				navires[iCoords.getX()][iCoords.getY()]=ship.getName().charAt(0);
+				iCoords.setX(iCoords.getX() + dx);
+				iCoords.setY(iCoords.getY() + dy);
+			}
+			return(true);
+		}
+		else{return(false);}
 	}
 
-	public boolean putShip(AbstractShip ship, Coords coords){ //à compléter
-		return(true);
-	}
-
-	public boolean hasShip(Coords coords){ //à compléter
-		return(true);
-	}
+	public boolean hasShip(Coords coords){ return(navires[coords.getX()][coords.getY()] != '.'); }
 
 	public void setHit(boolean hit, Coords coords){ //à compléter
 	}
@@ -110,6 +123,7 @@ public class Board implements IBoard { //IBoard c'est l'interface
 	public boolean canPutShip(AbstractShip ship, Coords coords) {
 		Orientation o = ship.getOrientation();
 		int dx = 0, dy = 0;
+		//Est-ce que le bateau sort du plateau?
 		if (o == Orientation.EAST) {
 			if (coords.getX() + ship.getLength() >= this.size) {
 				return false;
@@ -131,9 +145,8 @@ public class Board implements IBoard { //IBoard c'est l'interface
 			}
 			dx = -1;
 		}
-
+		//Est-ce qu'il y a un bateau qui gène?
 		Coords iCoords = new Coords(coords);
-
 		for (int i = 0; i < ship.getLength(); ++i) {
 			if (this.hasShip(iCoords)) {
 				return false;
@@ -141,7 +154,6 @@ public class Board implements IBoard { //IBoard c'est l'interface
 			iCoords.setX(iCoords.getX() + dx);
 			iCoords.setY(iCoords.getY() + dy);
 		}
-
 		return true;
 	}
 }
