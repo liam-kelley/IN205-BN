@@ -3,7 +3,7 @@ package ensta.model.ship;
 import ensta.util.Orientation;
 import ensta.model.Coords;
 
-public class AbstractShip {
+public abstract class AbstractShip {
     private Orientation orientation;
     private Coords coords;
     private int length;
@@ -21,17 +21,15 @@ public class AbstractShip {
         this.name = name;
     }
 
-    public Orientation getOrientation(){
-        return(this.orientation);
-	}
-
-    public int getLength(){
-        return(this.length);
-	}
-
-    public String getName(){
-        return(this.name);
-    }
+    public Orientation getOrientation(){return(this.orientation);}
+    public Coords getCoords(){return(this.coords);}
+    public int getLength(){return(this.length);}
+    public String getName(){return(this.name);}
+    
+    public void setOrientation(Orientation orientation){this.orientation = orientation;}
+    //public void setCoords(Coords coords){this.coords = coords;}
+    //public void setLength(int length){this.length = length;}
+    //public void setName(String name){this.name = name;}
 
     public boolean isSunk(){ //à compléter
         return(true);
