@@ -37,18 +37,24 @@ public class Player {
 	public void putShips() {
 		boolean done = false;
 		int i = 0;
-
+		AbstractShip ship;
+		String msg;
+		Coords coords = new Coords();
 		do {
-			AbstractShip ship = ships[i];
-			String msg = String.format("placer %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
+			ship = ships[i];
+			msg = String.format("placer %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
 			System.out.println(msg);
-			InputHelper.ShipInput res = InputHelper.readShipInput();
-			// TODO set ship orientation
-			// TODO put ship at given position
-			// TODO when ship placement successful
-			++i;
-			done = i == 5;
 
+			InputHelper.ShipInput res = InputHelper.readShipInput(); //Get input
+
+			ship.setOrientation(res.orientation); //res a des variables public...
+			coords.setCoords(res.x, res.y-1);
+
+			if(board.putShip(ship, coords)/*boolean true if ship placement successful*/){
+				++i;
+				done = i == 5;
+			}
+			else{System.out.println("Invalid entry, sorry! Ship can't be placed there.");}
 			board.print();
 		} while (!done);
 	}

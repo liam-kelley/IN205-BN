@@ -16,7 +16,13 @@ public abstract class AbstractShip {
         this.name = name;
     }
 
-    public AbstractShip(int length, String name){ //Constructeur sans init de orientation, position
+    public AbstractShip(Orientation orientation, int length, String name){
+        this.orientation = orientation;
+        this.length = length;
+        this.name = name;
+    }
+
+    public AbstractShip(int length, String name){
         this.length = length;
         this.name = name;
     }
@@ -27,6 +33,20 @@ public abstract class AbstractShip {
     public String getName(){return(this.name);}
     
     public void setOrientation(Orientation orientation){this.orientation = orientation;}
+    public void setOrientation(String orientation){
+        if(orientation == "north"){
+            this.orientation = Orientation.NORTH;
+        }
+        else if(orientation == "south"){
+            this.orientation = Orientation.SOUTH;
+        }
+        else if(orientation == "east"){
+            this.orientation = Orientation.EAST;
+        }
+        else if(orientation == "west"){
+            this.orientation = Orientation.WEST;
+        }
+    }
     //public void setCoords(Coords coords){this.coords = coords;}
     //public void setLength(int length){this.length = length;}
     //public void setName(String name){this.name = name;}

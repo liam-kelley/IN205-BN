@@ -12,11 +12,12 @@ public class Board implements IBoard { //IBoard c'est l'interface
 	private char[][] navires;
 	private boolean[][] frappes;
 
-	private void initBoards(int size){
-		navires = new char[size][size];
-		frappes = new boolean[size][size];
-		for (int i = 0; i<size; i++){
-			for (int j = 0; j<size; j++){
+	private void initBoards(){
+		int sze = this.size;
+		navires = new char[sze][sze];
+		frappes = new boolean[sze][sze];
+		for (int i = 0; i<sze; i++){
+			for (int j = 0; j<sze; j++){
 				navires[i][j]='.';
 				frappes[i][j]=false;
 			}
@@ -26,23 +27,23 @@ public class Board implements IBoard { //IBoard c'est l'interface
 	public Board(String name, int size) {
 		this.name = name;
 		this.size = size;
-		initBoards(size);
+		initBoards();
 	}
 
 	public Board(String name) {
 		this.name = name;
 		this.size = DEFAULT_SIZE;
-		initBoards(DEFAULT_SIZE);
+		initBoards();
 	}
 
 	public Board() {
 		this.size = DEFAULT_SIZE;
-		initBoards(DEFAULT_SIZE);
+		initBoards();
 	}
 
 	public int getSize() { return(this.size);}
 
-	public void print() { //à compléter
+	public void print() {
 		
 		System.out.print("Navires :");
 		for(int i = 0; i<this.size; i++){

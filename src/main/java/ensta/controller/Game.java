@@ -39,13 +39,14 @@ public class Game {
 
 	public Game init() {
 		if (!loadSave()) {
+			Board boardP1 = new Board("BoardP1");
+			Board boardP2 = new Board("BoardP2");
 
+			this.player1 = new Player(boardP1, boardP2, createDefaultShips());
+			this.player2 = new Player(boardP2, boardP1, createDefaultShips());
 
-			// TODO init boards
-
-			// TODO init this.player1 & this.player2
-
-			// TODO place player ships
+			this.player1.putShips();
+			this.player2.putShips();
 		}
 		return this;
 	}
