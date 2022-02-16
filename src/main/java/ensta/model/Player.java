@@ -42,7 +42,7 @@ public class Player {
 		Coords coords = new Coords();
 		do {
 			ship = ships[i];
-			msg = String.format("placer %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
+			msg = String.format("placer navire %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
 			System.out.println(msg);
 
 			InputHelper.ShipInput res = InputHelper.readShipInput(); //Get input

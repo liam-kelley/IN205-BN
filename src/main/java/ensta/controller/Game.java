@@ -45,7 +45,13 @@ public class Game {
 			this.player1 = new Player(boardP1, boardP2, createDefaultShips());
 			this.player2 = new Player(boardP2, boardP1, createDefaultShips());
 
+			System.out.println("\n" + "/////////////////////////////////////////////////\n////////  BATAILLE NAVALE - made by Liam ////////\n/////////////////////////////////////////////////\n");
+
+			System.out.println("Joueur 1, c'est à ton tour de placer tes navires.");
+			boardP1.print();
 			this.player1.putShips();
+			System.out.println("Joueur 2, c'est à ton tour de placer tes navires.");
+			boardP2.print();
 			this.player2.putShips();
 		}
 		return this;

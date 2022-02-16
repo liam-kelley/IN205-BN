@@ -8,23 +8,27 @@ public abstract class AbstractShip {
     private Coords coords;
     private int length;
     private String name;
+    private int strikeCount;
     
     public AbstractShip(Orientation orientation, Coords coords, int length, String name){
         this.orientation = orientation;
         this.coords = coords;
         this.length = length;
         this.name = name;
+        this.strikeCount = 0;
     }
 
     public AbstractShip(Orientation orientation, int length, String name){
         this.orientation = orientation;
         this.length = length;
         this.name = name;
+        this.strikeCount = 0;
     }
 
     public AbstractShip(int length, String name){
         this.length = length;
         this.name = name;
+        this.strikeCount = 0;
     }
 
     public Orientation getOrientation(){return(this.orientation);}
@@ -34,24 +38,24 @@ public abstract class AbstractShip {
     
     public void setOrientation(Orientation orientation){this.orientation = orientation;}
     public void setOrientation(String orientation){
-        if(orientation == "north"){
+        if(orientation.equals(new String("north"))){
             this.orientation = Orientation.NORTH;
         }
-        else if(orientation == "south"){
+        else if(orientation.equals(new String("south"))){
             this.orientation = Orientation.SOUTH;
         }
-        else if(orientation == "east"){
+        else if(orientation.equals(new String("east"))){
             this.orientation = Orientation.EAST;
         }
-        else if(orientation == "west"){
+        else if(orientation.equals(new String("west"))){
             this.orientation = Orientation.WEST;
         }
     }
-    //public void setCoords(Coords coords){this.coords = coords;}
-    //public void setLength(int length){this.length = length;}
-    //public void setName(String name){this.name = name;}
+    
+    public boolean isSunk(){return(strikeCount >= length);}
 
-    public boolean isSunk(){ //à compléter
-        return(true);
+    public void addStrike(){    //Could return boolean to check for errors
+        if(this.strikeCount<this.length){strikeCount++;}
+        else{System.out.println("Error! strikeCount too high.");}
     }
 }

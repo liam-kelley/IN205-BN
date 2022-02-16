@@ -2,24 +2,25 @@ package ensta.model;
 
 import ensta.model.ship.AbstractShip;
 import ensta.util.Orientation;
+import ensta.util.ColorUtil;
 
-public class Board implements IBoard { //IBoard c'est l'interface
+public class Board implements IBoard {
 
 	private static final int DEFAULT_SIZE = 10;
 	
 	private int size;
 	private String name;
-	private char[][] navires;
-	private boolean[][] frappes;
+	private ShipState[][] navires;
+	private Boolean[][] frappes; //Boolean has 3 values...
 
 	private void initBoards(){
 		int sze = this.size;
-		navires = new char[sze][sze];
-		frappes = new boolean[sze][sze];
+		navires = new ShipState[sze][sze];
+		frappes = new Boolean[sze][sze];
 		for (int i = 0; i<sze; i++){
 			for (int j = 0; j<sze; j++){
-				navires[i][j]='.';
-				frappes[i][j]=false;
+				navires[i][j]= new ShipState();
+				frappes[i][j]=null;
 			}
 		}
 	}
@@ -71,16 +72,16 @@ public class Board implements IBoard { //IBoard c'est l'interface
 			if(j+1<10){System.out.print((j+1) + "  ");}
 			else{System.out.print((j+1) + " ");}
 			for(int i = 0; i<this.size; i++){
-				System.out.print(navires[i][j] + " ");
+				if(navires[i][j].getShip()!=null){System.out.print(navires[i][j].toString().charAt(0) + " ");}
+				else{System.out.print(". ");}
 			}
 			if(j+1<10){System.out.print("  ");}
 			else{System.out.print(" ");}
 			System.out.print((j+1) + "  ");
 			for(int i = 0; i<this.size; i++){
-				if(frappes[i][j] == false){
-					System.out.print(". ");
-				}
-				else{System.out.print("X ");}
+				if(frappes[i][j] == null){System.out.print(". ");}
+				else if (frappes[i][j] == false) {System.out.print("X ");}
+				else if (frappes[i][j] == true) {System.out.print(ColorUtil.colorize("X ", ColorUtil.Color.RED));}
 			}
 			System.out.println("");
 		}
@@ -98,7 +99,7 @@ public class Board implements IBoard { //IBoard c'est l'interface
 
 			Coords iCoords = new Coords(coords);
 			for (int i = 0; i < ship.getLength(); ++i) {
-				navires[iCoords.getX()][iCoords.getY()]=ship.getName().charAt(0);
+				navires[iCoords.getX()][iCoords.getY()]= new ShipState(ship);   //.getName().charAt(0);
 				iCoords.setX(iCoords.getX() + dx);
 				iCoords.setY(iCoords.getY() + dy);
 			}
@@ -107,7 +108,7 @@ public class Board implements IBoard { //IBoard c'est l'interface
 		else{return(false);}
 	}
 
-	public boolean hasShip(Coords coords){ return(navires[coords.getX()][coords.getY()] != '.'); }
+	public boolean hasShip(Coords coords){ return(navires[coords.getX()][coords.getY()].getShip() != null); }
 
 	public void setHit(boolean hit, Coords coords){ //à compléter
 	}
