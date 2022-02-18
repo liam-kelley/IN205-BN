@@ -1,8 +1,7 @@
-package ensta.ai;
+package ensta.model.players;
 import java.util.List;
 
 import ensta.model.Board;
-import ensta.model.Player;
 import ensta.model.ship.AbstractShip;
 
 public class PlayerAI extends Player {

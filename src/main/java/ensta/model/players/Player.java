@@ -1,9 +1,12 @@
-package ensta.model;
+package ensta.model.players;
 
 import java.io.Serializable;
 import java.util.List;
 
 import ensta.controller.Game;
+import ensta.model.Board;
+import ensta.model.Coords;
+import ensta.model.Hit;
 import ensta.model.ship.AbstractShip;
 import ensta.util.Orientation;
 import ensta.view.InputHelper;
@@ -44,19 +47,19 @@ public class Player {
 		AbstractShip ship;
 		String msg;
 		Coords coords = new Coords();
-		System.out.println("Cher joueur " + this.name + " , c'est à ton tour de placer tes navires."); //Comment avoir le nom du joueur? Cela devrait être un paramètre.
+		System.out.println("Cher joueur " + this.name + " , c'est à ton tour de placer tes navires.");
 		ownBoard.print();
 		do {
 			ship = ships[i];
 			msg = String.format("placer navire %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
 			System.out.println(msg);
 
-			InputHelper.ShipInput res = InputHelper.readShipInput(); //Get input
+			InputHelper.ShipInput res = InputHelper.readShipInput();
 
 			ship.setOrientation(res.orientation); //res a des variables public...
 			coords.setCoords(res.x, res.y-1);
 
-			if(ownBoard.putShip(ship, coords)/*boolean true if ship placement successful*/){
+			if(ownBoard.putShip(ship, coords)/*true if ship placement successful*/){
 				++i;
 				done = i == 5;
 			}
@@ -69,7 +72,6 @@ public class Player {
 		boolean done = false;
 		Hit hit = null;
 		Coords coords;
-		//ownBoard.print();
 		do {
 			System.out.println("\n" + this.name + ", where do you want to hit? (Format: 'A1')");
 			InputHelper.CoordInput hitInput = InputHelper.readCoordInput(); //will catch wrong inputs. But wont check you've already hit somewhere.

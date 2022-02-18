@@ -1,19 +1,20 @@
-package ensta.model;
+package ensta.model.players;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
+import ensta.model.Board;
+import ensta.model.Coords;
 import ensta.model.ship.AbstractShip;
 import ensta.util.Orientation;
-import ensta.view.InputHelper;
 
 public class AutoSetupPlayer extends Player{
     public AutoSetupPlayer(String name, Board ownBoard, Board opponentBoard, List<AbstractShip> ships) {
 		super(name, ownBoard,opponentBoard,ships);
 	}
 
-    public void putShips() {    //écraser le putShips de Player.
+	@Override
+    public void putShips() {
 		boolean done = false;
 		int i = 0;
 		AbstractShip ship;

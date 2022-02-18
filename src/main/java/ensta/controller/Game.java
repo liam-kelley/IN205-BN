@@ -6,11 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import ensta.model.AutoSetupPlayer;
 import ensta.model.Board;
 import ensta.model.Coords;
 import ensta.model.Hit;
-import ensta.model.Player;
+import ensta.model.players.AutoSetupPlayer;
+import ensta.model.players.Player;
 import ensta.model.ship.AbstractShip;
 import ensta.model.ship.BattleShip;
 import ensta.model.ship.Carrier;
@@ -51,8 +51,10 @@ public class Game {
 			introMessage();
 			
 			this.player1.putShips();
+			pause();
 			System.out.println("");
 			this.player2.putShips();
+			pause();
 		}
 		return this;
 	}
@@ -85,14 +87,11 @@ public class Game {
 		Pair<Hit,Coords> pair; 
 		boolean gameOver;
 		boolean playAgain = false;
-
-		pause();
 		
 		// main loop
 		System.out.println("\n----------------PLAYER 1 DO HITS------------------\n");
 		pause();
 		b1.print();
-		pause();
 		do {
 			pair = player1.doHit(); //Won't leave its loop until its hit is done.
 			pause();
@@ -123,6 +122,7 @@ public class Game {
 
 					//if (!gameOver) {save();}
 					playAgain = checkForPlayAgain(pair.hit);
+					
 				} while (!gameOver && playAgain);
 				if (!gameOver) {
 					System.out.println("----------------PLAYER 1 DO HITS------------------\n");
