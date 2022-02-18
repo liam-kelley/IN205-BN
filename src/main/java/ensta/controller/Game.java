@@ -64,6 +64,20 @@ public class Game {
 		System.out.println("\n" + "/////////////////////////////////////////////////\n////////  BATAILLE NAVALE - made by Liam ////////\n/////////////////////////////////////////////////\n");
 	}
 
+	private void pause(){
+		try{Thread.sleep(1500);}
+		catch(InterruptedException ex){Thread.currentThread().interrupt();}
+	}
+
+	private void pauseBar(){
+		System.out.println("");
+		for(int i = 0; i < 15; i++){
+			try{Thread.sleep(100);}
+			catch(InterruptedException ex){Thread.currentThread().interrupt();}
+			System.out.print(". ");
+		}
+		System.out.println("\n");
+	}
 	
 	public void run() {
 		Board b1 = player1.getBoard();
@@ -72,38 +86,47 @@ public class Game {
 		boolean gameOver;
 		boolean playAgain = false;
 
+		pause();
+		
 		// main loop
 		System.out.println("\n----------------PLAYER 1 DO HITS------------------\n");
+		pause();
 		b1.print();
+		pause();
 		do {
 			pair = player1.doHit(); //Won't leave its loop until its hit is done.
+			pause();
 			gameOver = updateScore(); //returns true if one of the players has lost.
 
 			if(!playAgain){System.out.println("");}
 			b1.print();
 			System.out.println(makeHitMessage(false /*false = outgoing hit */, pair.coords, pair.hit));
+			pause();
 
 			//if (!gameOver) {save();}
 			playAgain = checkForPlayAgain(pair.hit);
 
 			if (!gameOver && !playAgain) {
 				System.out.println("----------------PLAYER 2 DO HITS------------------\n");
+				pause();
 				b2.print();
 				playAgain = false;
 				do {
 					pair = player2.doHit(); //Won't leave its loop until its hit is done.
+					pause();
 					gameOver = updateScore();
 
 					if(!playAgain){System.out.println("");}
 					b2.print();
-
 					System.out.println(makeHitMessage(false /* incoming hit */, pair.coords, pair.hit));
+					pause();
 
 					//if (!gameOver) {save();}
 					playAgain = checkForPlayAgain(pair.hit);
 				} while (!gameOver && playAgain);
 				if (!gameOver) {
 					System.out.println("----------------PLAYER 1 DO HITS------------------\n");
+					pause();
 					b1.print();
 					playAgain = false;
 				}

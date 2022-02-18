@@ -71,7 +71,7 @@ public class Player {
 		Coords coords;
 		//ownBoard.print();
 		do {
-			System.out.println("\n" + this.name + ", where do you want to hit? (Format: 'A0')");
+			System.out.println("\n" + this.name + ", where do you want to hit? (Format: 'A1')");
 			InputHelper.CoordInput hitInput = InputHelper.readCoordInput(); //will catch wrong inputs. But wont check you've already hit somewhere.
 			coords = new Coords(hitInput.x,hitInput.y);
 			if(!ownBoard.hasStruckThere(coords)){ //If you havent struck there already... 
