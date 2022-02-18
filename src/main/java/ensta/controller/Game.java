@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import ensta.model.AutoSetupPlayer;
 import ensta.model.Board;
 import ensta.model.Coords;
 import ensta.model.Hit;
@@ -16,6 +17,7 @@ import ensta.model.ship.Carrier;
 import ensta.model.ship.Destroyer;
 import ensta.model.ship.Submarine;
 import ensta.util.ColorUtil;
+import ensta.view.InputHelper;
 
 public class Game {
 
@@ -42,16 +44,13 @@ public class Game {
 			Board boardP1 = new Board("BoardP1");
 			Board boardP2 = new Board("BoardP2");
 
-			this.player1 = new Player(boardP1, boardP2, createDefaultShips());
-			this.player2 = new Player(boardP2, boardP1, createDefaultShips());
+			this.player1 = new AutoSetupPlayer("Corentin", boardP1, boardP2, createDefaultShips());
+			this.player2 = new AutoSetupPlayer("Thomas", boardP2, boardP1, createDefaultShips());
 
 			System.out.println("\n" + "/////////////////////////////////////////////////\n////////  BATAILLE NAVALE - made by Liam ////////\n/////////////////////////////////////////////////\n");
 
-			System.out.println("Joueur 1, c'est à ton tour de placer tes navires.");
-			boardP1.print();
 			this.player1.putShips();
-			System.out.println("Joueur 2, c'est à ton tour de placer tes navires.");
-			boardP2.print();
+			System.out.println("");
 			this.player2.putShips();
 		}
 		return this;
@@ -66,13 +65,12 @@ public class Game {
 		Hit hit;
 
 		// main loop
-		b1.print();
 		boolean done;
 		do {
-			hit = Hit.MISS; // TODO player1 send a hit
-			boolean strike = hit != Hit.MISS; // TODO set this hit on his board (b1)
+			player1.doHit(); //Won't leave its loop until its hit is done.
 
 			done = updateScore();
+
 			b1.print();
 			System.out.println(makeHitMessage(false /* outgoing hit */, coords, hit));
 
@@ -129,20 +127,15 @@ public class Game {
 		return false;
 	}
 
-	private boolean updateScore() {
+	private boolean updateScore() { //returns true if a player has lost.
 		for (Player player : new Player[] { player1, player2 }) {
 			int destroyed = 0;
-			for (AbstractShip ship : player.getShips()) {
-				if (ship.isSunk()) {
-					destroyed++;
-				}
+			for (AbstractShip ship : player.getShips()) { //Counts destroyed ships for each player
+				if (ship.isSunk()) { destroyed++; }
 			}
-
 			player.setDestroyedCount(destroyed);
 			player.setLose(destroyed == player.getShips().length);
-			if (player.isLose()) {
-				return true;
-			}
+			if (player.isLose()) {return true;}
 		}
 		return false;
 	}

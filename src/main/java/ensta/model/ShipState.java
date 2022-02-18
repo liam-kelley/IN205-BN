@@ -24,13 +24,13 @@ public class ShipState {
         return(str);
     }
     public boolean isStruck(){ return(this.struck); }
-    public boolean isSunk(){return(this.ship.isSunk());}
+    public boolean isSunk(){return(this.ship.isSunk());} //pointless... can just use getShip().isSunk()
     public void setStrike(){    //Could be boolean to check for errors.
         if(!this.struck){
             this.struck = true;
             ship.addStrike();
         }
-        else{System.out.println("Error! This part has been struck already");}
+        else{System.out.println("You dummy! This part has been struck already!");} //Should be redundant with proper protection from where the player is allowed to strike.
     }
     
     

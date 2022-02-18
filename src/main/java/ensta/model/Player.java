@@ -11,7 +11,8 @@ public class Player {
 	/*
 	 * ** Attributs
 	 */
-	private Board board;
+	protected String name;
+	protected Board ownBoard; //Now protected, for other player classes like AutoSetupPlayer
 	protected Board opponentBoard;
 	private int destroyedCount;
 	protected AbstractShip[] ships;
@@ -20,8 +21,9 @@ public class Player {
 	/*
 	 * ** Constructeur
 	 */
-	public Player(Board board, Board opponentBoard, List<AbstractShip> ships) {
-		this.setBoard(board);
+	public Player(String name, Board ownBoard, Board opponentBoard, List<AbstractShip> ships) {
+		this.name = name;
+		this.setBoard(ownBoard);
 		this.ships = ships.toArray(new AbstractShip[0]);
 		this.opponentBoard = opponentBoard;
 	}
@@ -40,6 +42,8 @@ public class Player {
 		AbstractShip ship;
 		String msg;
 		Coords coords = new Coords();
+		System.out.println("Cher joueur " + this.name + " , c'est à ton tour de placer tes navires."); //Comment avoir le nom du joueur? Cela devrait être un paramètre.
+		ownBoard.print();
 		do {
 			ship = ships[i];
 			msg = String.format("placer navire %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
@@ -50,29 +54,35 @@ public class Player {
 			ship.setOrientation(res.orientation); //res a des variables public...
 			coords.setCoords(res.x, res.y-1);
 
-			if(board.putShip(ship, coords)/*boolean true if ship placement successful*/){
+			if(ownBoard.putShip(ship, coords)/*boolean true if ship placement successful*/){
 				++i;
 				done = i == 5;
 			}
 			else{System.out.println("Invalid entry, sorry! Ship can't be placed there.");}
-			board.print();
+			ownBoard.print();
 		} while (!done);
 	}
 
-	public Hit sendHit(Coords coords) {
+	public void doHit() {
 		boolean done = false;
 		Hit hit = null;
+		Coords coords;
+		ownBoard.print();
 
 		do {
-			System.out.println("où frapper?");
-			InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
-			// TODO call sendHit on this.opponentBoard
-
-			// TODO : Game expects sendHit to return BOTH hit result & hit coords.
-			// return hit is obvious. But how to return coords at the same time ?
+			System.out.println("Where do you want to hit? (Format: 'A0')");
+			InputHelper.CoordInput hitInput = InputHelper.readCoordInput(); //will catch wrong inputs. But wont check you've already hit somewhere.
+			coords = new Coords(hitInput.x,hitInput.y);
+			if(!ownBoard.hasStruckThere(coords)){ //If you havent struck there already... 
+				hit = this.opponentBoard.boardHitByOpponent(coords); //Strike there! Returns a HIT, which explains if you hit, missed, or if you sank a boat (with its type)
+				ownBoard.updateDoneHits(hit, coords); //Update your own board of hits
+				if(hit.getValue()>0){
+					System.out.println("Hey! You just destroyed a " + hit.toString() + ". Congrats!");
+				}
+				done = true;
+			}
+			else{System.out.println("Sorry! You've already sent a hit there. Try somewhere else.");}
 		} while (!done);
-
-		return hit;
 	}
 
 	public AbstractShip[] getShips() {
@@ -84,11 +94,11 @@ public class Player {
 	}
 
 	public Board getBoard() {
-		return board;
+		return ownBoard;
 	}
 
-	public void setBoard(Board board) {
-		this.board = board;
+	public void setBoard(Board ownBoard) {
+		this.ownBoard = ownBoard;
 	}
 
 	public int getDestroyedCount() {

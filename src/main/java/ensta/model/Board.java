@@ -43,6 +43,8 @@ public class Board implements IBoard {
 	}
 
 	public int getSize() { return(this.size);}
+	public boolean hasShip(Coords coords){ return(navires[coords.getX()][coords.getY()].getShip() != null); }
+	public boolean hasStruckThere(Coords coords){ return(frappes[coords.getX()][coords.getY()] != null); }
 
 	public void print() {
 		
@@ -108,20 +110,6 @@ public class Board implements IBoard {
 		else{return(false);}
 	}
 
-	public boolean hasShip(Coords coords){ return(navires[coords.getX()][coords.getY()].getShip() != null); }
-
-	public void setHit(boolean hit, Coords coords){ //à compléter
-	}
-
-	public Boolean getHit(Coords coords){ //à compléter
-		return(true);
-	}
-
-	public Hit sendHit(Coords res){ //à compléter
-		Hit hit = Hit.MISS;
-		return(hit);
-	}
-
 	public boolean canPutShip(AbstractShip ship, Coords coords) {
 		Orientation o = ship.getOrientation();
 		int dx = 0, dy = 0;
@@ -158,4 +146,29 @@ public class Board implements IBoard {
 		}
 		return true;
 	}
+
+	public Hit boardHitByOpponent(Coords coords){
+		Hit hit;
+		int x = coords.getX();
+		int y = coords.getY();
+		AbstractShip ship = navires[x][y].getShip(); //can be null
+
+		if(ship ==null){hit = Hit.MISS;} //If they miss, you don't update your board.
+		else{ 							//Note: NOT CHECKING to see if this part of the board has been hit already. Good thing this is only called when player hasn't already struck there.
+			hit = Hit.STRIKE;			//If they hit, you update your board.
+			navires[x][y].setStrike();
+			if(ship.isSunk()){			//And if after they hit, that boat sank
+				hit = Hit.fromInt(ship.getLength()); //Then you can tell them what the sunken boat was.
+			}
+		}
+		return(hit);
+	}
+
+	public void updateDoneHits(Hit hit, Coords coords){
+		int x = coords.getX();
+		int y = coords.getY();
+		if(hit.getValue()==-1){frappes[x][y]=false;}	//I guess i could've used .toString() here... but getValue() is more convenient.
+		else{frappes[x][y]=true;}
+	}
+
 }
