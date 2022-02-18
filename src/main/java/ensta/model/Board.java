@@ -74,7 +74,10 @@ public class Board implements IBoard {
 			if(j+1<10){System.out.print((j+1) + "  ");}
 			else{System.out.print((j+1) + " ");}
 			for(int i = 0; i<this.size; i++){
-				if(navires[i][j].getShip()!=null){System.out.print(navires[i][j].toString().charAt(0) + " ");}
+				if( navires[i][j].getShip()!=null ) {
+					if (navires[i][j].isStruck()){System.out.print(ColorUtil.colorize("X ", ColorUtil.Color.RED));}
+					else{System.out.print(navires[i][j].toString().charAt(0) + " ");}
+				}
 				else{System.out.print(". ");}
 			}
 			if(j+1<10){System.out.print("  ");}

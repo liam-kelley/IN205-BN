@@ -6,18 +6,18 @@ import ensta.model.Player;
 import ensta.model.ship.AbstractShip;
 
 public class PlayerAI extends Player {
-    /* **
-     * Attribut
-     */
-    private BattleShipsAI ai;
+    // /* **
+    //  * Attribut
+    //  */
+    // private BattleShipsAI ai;
 
-    /* **
-     * Constructeur
-     */
+    // /* **
+    //  * Constructeur
+    //  */
     public PlayerAI(Board ownBoard, Board opponentBoard, List<AbstractShip> ships) {
         super("Computer", ownBoard, opponentBoard, ships);
-        ai = new BattleShipsAI(ownBoard, opponentBoard);
+        //ai = new BattleShipsAI(ownBoard, opponentBoard);
     }
 
-    // TODO AIPlayer must not inherit "keyboard behavior" from player. Call ai instead.
+    // // TODO AIPlayer must not inherit "keyboard behavior" from player. Call ai instead.
 }

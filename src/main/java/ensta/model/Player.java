@@ -3,9 +3,11 @@ package ensta.model;
 import java.io.Serializable;
 import java.util.List;
 
+import ensta.controller.Game;
 import ensta.model.ship.AbstractShip;
 import ensta.util.Orientation;
 import ensta.view.InputHelper;
+import ensta.util.Pair;
 
 public class Player {
 	/*
@@ -63,26 +65,24 @@ public class Player {
 		} while (!done);
 	}
 
-	public void doHit() {
+	public Pair<Hit,Coords> doHit() {
 		boolean done = false;
 		Hit hit = null;
 		Coords coords;
-		ownBoard.print();
-
+		//ownBoard.print();
 		do {
-			System.out.println("Where do you want to hit? (Format: 'A0')");
+			System.out.println("\n" + this.name + ", where do you want to hit? (Format: 'A0')");
 			InputHelper.CoordInput hitInput = InputHelper.readCoordInput(); //will catch wrong inputs. But wont check you've already hit somewhere.
 			coords = new Coords(hitInput.x,hitInput.y);
 			if(!ownBoard.hasStruckThere(coords)){ //If you havent struck there already... 
 				hit = this.opponentBoard.boardHitByOpponent(coords); //Strike there! Returns a HIT, which explains if you hit, missed, or if you sank a boat (with its type)
 				ownBoard.updateDoneHits(hit, coords); //Update your own board of hits
-				if(hit.getValue()>0){
-					System.out.println("Hey! You just destroyed a " + hit.toString() + ". Congrats!");
-				}
 				done = true;
 			}
 			else{System.out.println("Sorry! You've already sent a hit there. Try somewhere else.");}
 		} while (!done);
+		Pair<Hit,Coords> pair = Pair.makePair(hit,coords);
+		return(pair);
 	}
 
 	public AbstractShip[] getShips() {

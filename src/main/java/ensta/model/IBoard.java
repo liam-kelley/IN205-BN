@@ -26,4 +26,6 @@ public interface IBoard {
     public boolean hasShip(Coords coords);
 
 	public boolean canPutShip(AbstractShip ship, Coords coords);
+
+    
 }

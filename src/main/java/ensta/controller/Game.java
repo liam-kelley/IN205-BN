@@ -17,6 +17,7 @@ import ensta.model.ship.Carrier;
 import ensta.model.ship.Destroyer;
 import ensta.model.ship.Submarine;
 import ensta.util.ColorUtil;
+import ensta.util.Pair;
 import ensta.view.InputHelper;
 
 public class Game {
@@ -47,8 +48,8 @@ public class Game {
 			this.player1 = new AutoSetupPlayer("Corentin", boardP1, boardP2, createDefaultShips());
 			this.player2 = new AutoSetupPlayer("Thomas", boardP2, boardP1, createDefaultShips());
 
-			System.out.println("\n" + "/////////////////////////////////////////////////\n////////  BATAILLE NAVALE - made by Liam ////////\n/////////////////////////////////////////////////\n");
-
+			introMessage();
+			
 			this.player1.putShips();
 			System.out.println("");
 			this.player2.putShips();
@@ -59,46 +60,62 @@ public class Game {
 	/*
 	 * *** Méthodes
 	 */
+	private void introMessage(){
+		System.out.println("\n" + "/////////////////////////////////////////////////\n////////  BATAILLE NAVALE - made by Liam ////////\n/////////////////////////////////////////////////\n");
+	}
+
+	
 	public void run() {
-		Coords coords = new Coords();
 		Board b1 = player1.getBoard();
-		Hit hit;
+		Board b2 = player2.getBoard();
+		Pair<Hit,Coords> pair; 
+		boolean gameOver;
+		boolean playAgain = false;
 
 		// main loop
-		boolean done;
+		System.out.println("\n----------------PLAYER 1 DO HITS------------------\n");
+		b1.print();
 		do {
-			player1.doHit(); //Won't leave its loop until its hit is done.
+			pair = player1.doHit(); //Won't leave its loop until its hit is done.
+			gameOver = updateScore(); //returns true if one of the players has lost.
 
-			done = updateScore();
-
+			if(!playAgain){System.out.println("");}
 			b1.print();
-			System.out.println(makeHitMessage(false /* outgoing hit */, coords, hit));
+			System.out.println(makeHitMessage(false /*false = outgoing hit */, pair.coords, pair.hit));
 
-			// save();
+			//if (!gameOver) {save();}
+			playAgain = checkForPlayAgain(pair.hit);
 
-			if (!done && !strike) {
+			if (!gameOver && !playAgain) {
+				System.out.println("----------------PLAYER 2 DO HITS------------------\n");
+				b2.print();
+				playAgain = false;
 				do {
-					hit = Hit.MISS; // TODO player2 send a hit.
+					pair = player2.doHit(); //Won't leave its loop until its hit is done.
+					gameOver = updateScore();
 
-					strike = hit != Hit.MISS;
-					if (strike) {
-						b1.print();
-					}
-					System.out.println(makeHitMessage(true /* incoming hit */, coords, hit));
-					done = updateScore();
+					if(!playAgain){System.out.println("");}
+					b2.print();
 
-					if (!done) {
-//						save();
-					}
-				} while (strike && !done);
+					System.out.println(makeHitMessage(false /* incoming hit */, pair.coords, pair.hit));
+
+					//if (!gameOver) {save();}
+					playAgain = checkForPlayAgain(pair.hit);
+				} while (!gameOver && playAgain);
+				if (!gameOver) {
+					System.out.println("----------------PLAYER 1 DO HITS------------------\n");
+					b1.print();
+					playAgain = false;
+				}
 			}
-
-		} while (!done);
+		} while (!gameOver);
 
 		SAVE_FILE.delete();
-		System.out.println(String.format("joueur %d gagne", player1.isLose() ? 2 : 1));
+		System.out.println(String.format("Le joueur %d a gagné!", player1.isLose() ? 2 : 1));
 		sin.close();
 	}
+
+	private boolean checkForPlayAgain(Hit hit){ return(hit != Hit.MISS); }
 
 	private void save() {
 //		try {
@@ -155,8 +172,7 @@ public class Game {
 			msg = hit.toString() + " coulé";
 			color = ColorUtil.Color.RED;
 		}
-		msg = String.format("%s Frappe en %c%d : %s", incoming ? "<=" : "=>", ((char) ('A' + coords.getX())),
-				(coords.getY() + 1), msg);
+		msg = String.format("%s Frappe en %c%d : %s%s", incoming ? "<=" : "=>", ((char) ('A' + coords.getX())), (coords.getY() + 1), msg, "\n");
 		return ColorUtil.colorize(msg, color);
 	}
 
