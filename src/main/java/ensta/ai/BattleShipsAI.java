@@ -10,179 +10,167 @@ import ensta.util.Orientation;
 
 public class BattleShipsAI implements Serializable {
 
-	// /*
-	//  * ** Attributs
-	//  */
+	/*
+	 * ** Attributs
+	 */
 
-	// /**
-	//  * My board. My ships have to be put on this one.
-	//  */
-	// private final IBoard board;
+	/**
+	 * My board. My ships have to be put on this one.
+	 */
+	private final IBoard board;
 
-	// /**
-	//  * My opponent's board. My hits go on this one to strike his ships.
-	//  */
-	// private final IBoard opponent;
+	/**
+	 * My opponent's board. My hits go on this one to strike his ships.
+	 */
+	private final IBoard opponent;
 
-	// /**
-	//  * Coordss of last known strike. Would be a good idea to target next hits around
-	//  * this point.
-	//  */
-	// private Coords lastStrike;
+	/**
+	 * Coordss of last known strike. Would be a good idea to target next hits around
+	 * this point.
+	 */
+	private Coords lastStrike;
 
-	// /**
-	//  * If last known strike lead me to think the underlying ship has vertical
-	//  * placement.
-	//  */
-	// private Boolean lastVertical;
+	/**
+	 * If last known strike lead me to think the underlying ship has vertical
+	 * placement.
+	 */
+	private Boolean lastVertical;
 
-	// /*
-	//  * ** Constructeur
-	//  */
+	/*
+	 * ** Constructeur
+	 */
 
-	// /**
-	//  *
-	//  * @param myBoard       board where ships will be put.
-	//  * @param opponentBoard Opponent's board, where hits will be sent.
-	//  */
-	// public BattleShipsAI(IBoard myBoard, IBoard opponentBoard) {
-	// 	this.board = myBoard;
-	// 	this.opponent = opponentBoard;
-	// }
+	/**
+	 *
+	 * @param ownBoard       board where ships will be put.
+	 * @param opponentBoard Opponent's board, where hits will be sent.
+	 */
+	public BattleShipsAI(IBoard ownBoard, IBoard opponentBoard) {
+		this.board = ownBoard;
+		this.opponent = opponentBoard;
+	}
 
-	// /*
-	//  * ** Méthodes publiques
-	//  */
+	/*
+	 * ** Méthodes publiques
+	 */
 
-	// /**
-	//  * Put the ships on owned board.
-	//  * 
-	//  * @param ships the ships to put
-	//  */
-	// public void putShips(AbstractShip ships[]) {
-	// 	Coords coords;
-	// 	Orientation orientation;
-	// 	Orientation[] orientations = Orientation.values();
+	//TODO do autoPutShips here because its an ai....? Importing from AutoSetupPlayer is more direct and less annoying with the ai
 
-	// 	for (AbstractShip ship : ships) {
-	// 		do {
-	// 			// TODO use Random to pick a random x, y & orientation
+	/**
+	 * ai will choose proper strike coordinates.
+	 * This function won't be updating any boards. That's the AIPlayers job.
+	 * This function won't update the ai on its lastVertical or its lastStrike like how sendHit() would've done.
+	 * 
+	 * @return the valid strike coords
+	 */
+	public Coords chooseValidStrikeCoords() {
+		Coords validStrikeCoords = null;
 
-	// 			coords = Coords.randomCoords(10);//placeholder
-	// 		} while (!board.canPutShip(ship, coords));
-	// 		board.putShip(ship, coords);
-	// 	}
-	// }
+		// already found strike & orientation?
+		if (lastVertical != null) {
+			if (lastVertical) {validStrikeCoords = pickVCoords();}
+			else {validStrikeCoords = pickHCoords();}
 
-	// /**
-	//  *
-	//  * @param coords array must be of size 2. Will hold the coords of the send hit.
-	//  * @return the status of the hit.
-	//  */
-	// public Hit sendHit(Coords coords) {
-	// 	Coords res = null;
-	// 	if (coords == null) {
-	// 		throw new IllegalArgumentException("must provide an initialized array of size 2");
-	// 	}
+			if (validStrikeCoords == null) {
+				// no suitable coords found... forget last strike.
+				lastStrike = null;
+				lastVertical = null;
+			}
+		}
+		else if (lastStrike != null) {
+			// if already found a strike, without orientation
+			// try to guess orientation
+			validStrikeCoords = pickVCoords();
+			if (validStrikeCoords == null) {
+				validStrikeCoords = pickHCoords();
+			}
+			if (validStrikeCoords == null) {
+				// no suitable coords found... forget last strike.
+				lastStrike = null;
+			}
+		}
+		if (lastStrike == null) {
+			validStrikeCoords = pickRandomCoords(); //These will be valid.
+		}
+		return validStrikeCoords;
+	}
 
-	// 	// already found strike & orientation?
-	// 	if (lastVertical != null) {
-	// 		if (lastVertical) {
-	// 			res = pickVCoords();
-	// 		} else {
-	// 			res = pickHCoords();
-	// 		}
+	/**
+	 * This function updates the ai on its lastVertical or its lastStrike like how sendHit() would've done.
+	 * 
+	 * @param hit last done hit with its
+	 * @param coords coords
+	 */
+	public void updateLasts(Hit hit, Coords coords){
+		if (hit != Hit.MISS) {
+			if (lastStrike != null) {
+				lastVertical = guessOrientation(lastStrike, coords); //true if last strike was below
+			}
+			lastStrike = coords;
+		}
+	}
 
-	// 		if (res == null) {
-	// 			// no suitable coords found... forget last strike.
-	// 			lastStrike = null;
-	// 			lastVertical = null;
-	// 		}
-	// 	} else if (lastStrike != null) {
-	// 		// if already found a strike, without orientation
-	// 		// try to guess orientation
-	// 		res = pickVCoords();
-	// 		if (res == null) {
-	// 			res = pickHCoords();
-	// 		}
-	// 		if (res == null) {
-	// 			// no suitable coords found... forget last strike.
-	// 			lastStrike = null;
-	// 		}
-	// 	}
+	/*
+	 * *** Méthodes privées
+	 */
 
-	// 	if (lastStrike == null) {
-	// 		res = pickRandomCoords();
-	// 	}
+	/**
+	 * @param lastStrikee
+	 * @param currentStrike
+	 * @preturn true if last hit was vertically aligned
+	 */
+	private boolean guessOrientation(Coords lastStrikee, Coords currentStrike) { 
+		return lastStrikee.getX() == currentStrike.getX(); //last strike has same x position as current X BUGFIX
+	}
 
-	// 	Hit hit = opponent.sendHit(res);
-	// 	board.setHit(hit != Hit.MISS, res);
+	private boolean isUndiscovered(Coords coords) {
+		return (coords.isInBoard(board.getSize()) && board.getFrappe(coords) == null ) ;
+	}
 
-	// 	if (hit != Hit.MISS) {
-	// 		if (lastStrike != null) {
-	// 			lastVertical = guessOrientation(lastStrike, res);
-	// 		}
-	// 		lastStrike = res;
-	// 	}
+	private Coords pickRandomCoords() {
+		Coords coords;
+		do {
+			coords = Coords.randomCoords(board.getSize());
+		} while (!isUndiscovered(coords));
 
-	// 	coords.setCoords(res);
-	// 	return hit;
-	// }
+		return coords;
+	}
 
-	// /*
-	//  * *** Méthodes privées
-	//  */
+	/**
+	 * pick a coords verically around last known strike. Looks above then below, then further above, then further below (is this true?)
+	 * Can return null if no suitable candidates are found
+	 * 
+	 * @return suitable coords, or null if none is suitable
+	 */
+	private Coords pickVCoords() {
+		int x = lastStrike.getX();
+		int y = lastStrike.getY();
 
-	// private boolean guessOrientation(Coords lastStrike2, Coords res) {
-	// 	return lastStrike2.getX() == res.getY();
-	// }
+		for (int iy : new int[] { y - 1, y + 1 }) {
+			Coords coords = new Coords(x, iy);
+			if (isUndiscovered(coords)) {
+				return coords;
+			}
+		}
+		return null;
+	}
 
-	// private boolean isUndiscovered(Coords coords) {
-	// 	return coords.isInBoard(board.getSize()) && board.getHit(coords) == null;
-	// }
+	/**
+	 * pick a coords horizontally around last known strike. Looks left then right, then further left, then further right (is this true?)
+	 * 
+	 * @return suitable coords, or null if none is suitable
+	 */
+	private Coords pickHCoords() {
+		int x = lastStrike.getX();
+		int y = lastStrike.getY();
 
-	// private Coords pickRandomCoords() {
-	// 	Coords coords;
-	// 	do {
-	// 		coords = Coords.randomCoords(board.getSize());
-	// 	} while (!isUndiscovered(coords));
-
-	// 	return coords;
-	// }
-
-	// /**
-	//  * pick a coords verically around last known strike
-	//  * 
-	//  * @return suitable coords, or null if none is suitable
-	//  */
-	// private Coords pickVCoords() {
-	// 	int x = lastStrike.getX();
-	// 	int y = lastStrike.getY();
-
-	// 	for (int iy : new int[] { y - 1, y + 1 }) {
-	// 		Coords coords = new Coords(x, iy);
-	// 		if (isUndiscovered(coords)) {
-	// 			return coords;
-	// 		}
-	// 	}
-	// 	return null;
-	// }
-
-	// /**
-	//  * pick a coords horizontally around last known strike
-	//  * 
-	//  * @return suitable coords, or null if none is suitable
-	//  */
-	// private Coords pickHCoords() {
-	// 	int x = lastStrike.getX();
-	// 	int y = lastStrike.getY();
-
-	// 	for (int ix : new int[] { x - 1, x + 1 }) {
-	// 		Coords coords = new Coords(ix, y);
-	// 		if (isUndiscovered(coords)) {
-	// 			return coords;
-	// 		}
-	// 	}
-	// 	return null;
-	// }
+		for (int ix : new int[] { x - 1, x + 1 }) {
+			Coords coords = new Coords( Math.min(Math.max(0,ix), board.getSize()-1)
+										, Math.min(Math.max(0,y), board.getSize()-1));
+			if (isUndiscovered(coords)) {
+				return coords;
+			}
+		}
+		return null;
+	}
 }

@@ -24,7 +24,7 @@ public class AutoSetupPlayer extends Player{
 		System.out.println("Cher joueur " + this.name + " , AutoSetup en cours.");
 		do {
 			ship = ships[i];
-            ship.setOrientation(Orientation.EAST);
+            ship.setOrientation(Orientation.randomOrientation());
             coords.setCoords(ran.nextInt(boardSize), ran.nextInt(boardSize));
 			if(ownBoard.putShip(ship, coords)/*boolean true if ship placement successful*/){
 				++i;

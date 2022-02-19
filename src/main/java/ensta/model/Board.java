@@ -45,6 +45,7 @@ public class Board implements IBoard {
 	public int getSize() { return(this.size);}
 	public boolean hasShip(Coords coords){ return(navires[coords.getX()][coords.getY()].getShip() != null); }
 	public boolean hasStruckThere(Coords coords){ return(frappes[coords.getX()][coords.getY()] != null); }
+	public Boolean getFrappe(Coords coords){return(frappes[coords.getX()][coords.getY()]);}
 
 	public void print() {
 		

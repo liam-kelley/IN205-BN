@@ -27,5 +27,7 @@ public interface IBoard {
 
 	public boolean canPutShip(AbstractShip ship, Coords coords);
 
+    public Boolean getFrappe(Coords coords);
+
     
 }

@@ -9,6 +9,7 @@ import java.util.Scanner;
 import ensta.model.Board;
 import ensta.model.Coords;
 import ensta.model.Hit;
+import ensta.model.players.AIPlayer;
 import ensta.model.players.AutoSetupPlayer;
 import ensta.model.players.Player;
 import ensta.model.ship.AbstractShip;
@@ -45,8 +46,8 @@ public class Game {
 			Board boardP1 = new Board("BoardP1");
 			Board boardP2 = new Board("BoardP2");
 
-			this.player1 = new AutoSetupPlayer("Corentin", boardP1, boardP2, createDefaultShips());
-			this.player2 = new AutoSetupPlayer("Thomas", boardP2, boardP1, createDefaultShips());
+			this.player1 = new AIPlayer("Liam", boardP1, boardP2, createDefaultShips());
+			this.player2 = new AIPlayer("Sylvain", boardP2, boardP1, createDefaultShips());
 
 			introMessage();
 			
@@ -66,19 +67,9 @@ public class Game {
 		System.out.println("\n" + "/////////////////////////////////////////////////\n////////  BATAILLE NAVALE - made by Liam ////////\n/////////////////////////////////////////////////\n");
 	}
 
-	private void pause(){
+	protected void pause(){
 		try{Thread.sleep(1500);}
 		catch(InterruptedException ex){Thread.currentThread().interrupt();}
-	}
-
-	private void pauseBar(){
-		System.out.println("");
-		for(int i = 0; i < 15; i++){
-			try{Thread.sleep(100);}
-			catch(InterruptedException ex){Thread.currentThread().interrupt();}
-			System.out.print(". ");
-		}
-		System.out.println("\n");
 	}
 	
 	public void run() {
@@ -140,33 +131,6 @@ public class Game {
 
 	private boolean checkForPlayAgain(Hit hit){ return(hit != Hit.MISS); }
 
-	private void save() {
-//		try {
-//			// TODO bonus 2 : uncomment
-//			// if (!SAVE_FILE.exists()) {
-//			// SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
-//			// }
-//
-//			// TODO bonus 2 : serialize players
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-	}
-
-	private boolean loadSave() {
-//		if (SAVE_FILE.exists()) {
-//			try {
-//				// TODO bonus 2 : deserialize players
-//
-//				return true;
-//			} catch (IOException | ClassNotFoundException e) {
-//				e.printStackTrace();
-//			}
-//		}
-		return false;
-	}
-
 	private boolean updateScore() { //returns true if a player has lost.
 		for (Player player : new Player[] { player1, player2 }) {
 			int destroyed = 0;
@@ -204,3 +168,31 @@ public class Game {
 				new Carrier() });
 	}
 }
+
+
+private void save() {
+	//		try {
+	//			// TODO bonus 2 : uncomment
+	//			// if (!SAVE_FILE.exists()) {
+	//			// SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+	//			// }
+	//
+	//			// TODO bonus 2 : serialize players
+	//
+	//		} catch (IOException e) {
+	//			e.printStackTrace();
+	//		}
+		}
+	
+		private boolean loadSave() {
+	//		if (SAVE_FILE.exists()) {
+	//			try {
+	//				// TODO bonus 2 : deserialize players
+	//
+	//				return true;
+	//			} catch (IOException | ClassNotFoundException e) {
+	//				e.printStackTrace();
+	//			}
+	//		}
+			return false;
+		}

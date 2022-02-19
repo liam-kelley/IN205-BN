@@ -1,5 +1,7 @@
 package ensta.model;
 
+import java.util.Random;
+
 public class Coords {
 
     private int X;
@@ -36,9 +38,9 @@ public class Coords {
             this.Y = 0;
         }
     }
-    public static Coords randomCoords(int boardSize){ //à compléter (Pourquoi est-ce static?? Simplement ajouté pour régler les erreurs...)
-        Coords returnedCoords = new Coords(0,0);
-        return(returnedCoords);
+    public static Coords randomCoords(int boardSize){
+        Random ran =  new Random();
+        return(new Coords(ran.nextInt(boardSize),ran.nextInt(boardSize)));
     }
     public int getX(){
         return(this.X);
@@ -47,7 +49,7 @@ public class Coords {
         return(this.Y);
     }
 
-    public boolean isInBoard(int boardSize){ //à Compléter
-        return(true);
+    public boolean isInBoard(int boardSize){
+        return(this.X < boardSize && this.Y < boardSize);
     }
 }
