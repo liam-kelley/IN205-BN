@@ -87,6 +87,10 @@ public class Player {
 		return(pair);
 	}
 
+	public String getName() {
+		return this.name;
+	}
+
 	public AbstractShip[] getShips() {
 		return ships;
 	}

@@ -33,7 +33,6 @@ public class Game {
 	 */
 	private Player player1;
 	private Player player2;
-	private Scanner sin;
 
 	/*
 	 * *** Constructeurs
@@ -125,8 +124,7 @@ public class Game {
 		} while (!gameOver);
 
 		SAVE_FILE.delete();
-		System.out.println(String.format("Le joueur %d a gagné!", player1.isLose() ? 2 : 1));
-		sin.close();
+		System.out.println(String.format("Le joueur %s a gagné!\n\nBravo a lui!!!\n", player1.isLose() ? player2.getName() : player1.getName()));
 	}
 
 	private boolean checkForPlayAgain(Hit hit){ return(hit != Hit.MISS); }
@@ -139,7 +137,7 @@ public class Game {
 			}
 			player.setDestroyedCount(destroyed);
 			player.setLose(destroyed == player.getShips().length);
-			if (player.isLose()) {return true;}
+			if (player.isLose()) {return true;} //here.
 		}
 		return false;
 	}
@@ -167,7 +165,7 @@ public class Game {
 		return Arrays.asList(new AbstractShip[] { new Destroyer(), new Submarine(), new Submarine(), new BattleShip(),
 				new Carrier() });
 	}
-}
+
 
 
 private void save() {
@@ -196,3 +194,4 @@ private void save() {
 	//		}
 			return false;
 		}
+	}

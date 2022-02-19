@@ -147,7 +147,8 @@ public class BattleShipsAI implements Serializable {
 		int y = lastStrike.getY();
 
 		for (int iy : new int[] { y - 1, y + 1 }) {
-			Coords coords = new Coords(x, iy);
+			Coords coords = new Coords(Math.min(Math.max(0,x), board.getSize()-1)
+									, Math.min(Math.max(0,iy), board.getSize()-1));
 			if (isUndiscovered(coords)) {
 				return coords;
 			}

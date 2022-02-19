@@ -36,7 +36,7 @@ public class AIPlayer extends AutoSetupPlayer {
     *   @return A pair of the done hit and its position for game.
     */
     @Override
-    public Pair<Hit,Coords> doHit() { //TODO AIPlayer must Call ai
+    public Pair<Hit,Coords> doHit() { 
 		Hit hit = null;
 		Coords coords;
 
