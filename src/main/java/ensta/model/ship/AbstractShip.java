@@ -1,9 +1,12 @@
 package ensta.model.ship;
 
 import ensta.util.Orientation;
+
+import java.io.Serializable;
+
 import ensta.model.Coords;
 
-public abstract class AbstractShip {
+public abstract class AbstractShip implements Serializable{
     private Orientation orientation;
     private Coords coords;
     private int length;
