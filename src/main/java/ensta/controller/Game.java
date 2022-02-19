@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 import ensta.model.Board;
 import ensta.model.Coords;
@@ -19,7 +18,6 @@ import ensta.model.ship.Destroyer;
 import ensta.model.ship.Submarine;
 import ensta.util.ColorUtil;
 import ensta.util.Pair;
-import ensta.view.InputHelper;
 
 public class Game {
 
@@ -92,7 +90,7 @@ public class Game {
 			System.out.println(makeHitMessage(false /*false = outgoing hit */, pair.coords, pair.hit));
 			pause();
 
-			//if (!gameOver) {save();}
+			if (!gameOver) {save();}
 			playAgain = checkForPlayAgain(pair.hit);
 
 			if (!gameOver && !playAgain) {
@@ -110,7 +108,7 @@ public class Game {
 					System.out.println(makeHitMessage(false /* incoming hit */, pair.coords, pair.hit));
 					pause();
 
-					//if (!gameOver) {save();}
+					if (!gameOver) {save();}
 					playAgain = checkForPlayAgain(pair.hit);
 					
 				} while (!gameOver && playAgain);
@@ -166,32 +164,50 @@ public class Game {
 				new Carrier() });
 	}
 
+	private void save() {
+		java.io.FileOutputStream fout = null;
+		java.io.ObjectOutputStream oos = null;
+		try {
+			if (!SAVE_FILE.exists()) {
+			SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+			}
+			
+			Player[] players = new Player[2];
+			players[0]=player1;
+			players[1]=player2;
 
-
-private void save() {
-	//		try {
-	//			// TODO bonus 2 : uncomment
-	//			// if (!SAVE_FILE.exists()) {
-	//			// SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
-	//			// }
-	//
-	//			// TODO bonus 2 : serialize players
-	//
-	//		} catch (IOException e) {
-	//			e.printStackTrace();
-	//		}
+			fout = new java.io.FileOutputStream(SAVE_FILE);
+			oos = new java.io.ObjectOutputStream(fout);
+			oos.writeObject(players);
+			if(oos != null){
+				oos.close();
+			} 
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
+	}
+
 	
-		private boolean loadSave() {
-	//		if (SAVE_FILE.exists()) {
-	//			try {
-	//				// TODO bonus 2 : deserialize players
-	//
-	//				return true;
-	//			} catch (IOException | ClassNotFoundException e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-			return false;
+	private boolean loadSave() {
+		if (SAVE_FILE.exists()) {
+			java.io.ObjectInputStream objectinputstream = null;
+			Player[] players = new Player[2];
+			try {
+				java.io.FileInputStream streamIn = new java.io.FileInputStream("G:\\address.ser");
+				objectinputstream = new java.io.ObjectInputStream(streamIn);
+				Player[] readCase = (Player[]) objectinputstream.readObject(); //Should I be doing java lists instead of []?
+				if(objectinputstream != null){
+					objectinputstream.close();
+				} 
+				
+				players = readCase;
+				this.player1 = players[0];
+				this.player2 = players[1];
+				return true;
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
+		return false;
+	}
 	}

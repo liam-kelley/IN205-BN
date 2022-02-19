@@ -3,21 +3,19 @@ package ensta.model.players;
 import java.io.Serializable;
 import java.util.List;
 
-import ensta.controller.Game;
 import ensta.model.Board;
 import ensta.model.Coords;
 import ensta.model.Hit;
 import ensta.model.ship.AbstractShip;
-import ensta.util.Orientation;
 import ensta.view.InputHelper;
 import ensta.util.Pair;
 
-public class Player {
+public class Player implements Serializable{
 	/*
 	 * ** Attributs
 	 */
 	protected String name;
-	protected Board ownBoard; //Now protected, for other player classes like AutoSetupPlayer
+	protected Board ownBoard; //Now protected, for other player classes like AutoSetupPlayer ease of access
 	protected Board opponentBoard;
 	private int destroyedCount;
 	protected AbstractShip[] ships;
