@@ -39,20 +39,6 @@ public class Game {
 	public Game() {
 	}
 
-	public Game init() {
-		if (!loadSave()) {
-			newGameSequence();
-		}
-		else{
-			System.out.println("Save game data found. Continue saved game? (Y/N)");
-			if (!InputHelper.readYN()){
-				System.out.println("Starting new game...");
-				newGameSequence();
-			}
-			else{System.out.println("Continuing game...");}
-		}
-		return this;
-	}
 	public Game init(String P1type, String P1name, String P2type, String P2name) {
 		if (!loadSave()) {
 			newGameSequence(P1type, P1name, P2type, P2name);
@@ -68,23 +54,17 @@ public class Game {
 		return this;
 	}
 
+	public Game init() {
+		return this.init(null,null,null,null);
+	}
+
 	/*
 	 * *** Méthodes
 	 */
-	private void newGameSequence(){
-		createPlayers();
-
-		introMessage();
-		
-		this.player1.putShips();
-		pause();
-		System.out.println("");
-		this.player2.putShips();
-		pause();
-	}
 
 	private void newGameSequence(String P1type, String P1name, String P2type, String P2name){
-		createPlayers(P1type, P1name, P2type, P2name);
+		if(P1type == null | P1name == null | P2type == null | P2name== null){createPlayers();}
+		else{createPlayers(P1type, P1name, P2type, P2name);}
 
 		introMessage();
 		System.out.println("Test");

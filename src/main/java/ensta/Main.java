@@ -7,6 +7,7 @@ public class Main {
 
 	public static void main(String args[]) {
         new Game().init().run();
+        //new Game().init("ai","Sylvain","ai","Philippe").run();
         //new SuperFastGame().init().run();
         /*int gamesDone = 0;
         int scoreP1 = 0;
@@ -17,7 +18,7 @@ public class Main {
             gamesDone++;
         }
         System.out.println("Score de Sylvain = " + scoreP1);
-        System.out.println("Score de Philippe = " + scoreP2); */
+        System.out.println("Score de Philippe = " + scoreP2);*/
         
     }
 
