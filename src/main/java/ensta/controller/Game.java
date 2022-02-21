@@ -63,11 +63,12 @@ public class Game {
 	 */
 
 	private void newGameSequence(String P1type, String P1name, String P2type, String P2name){
+		
+		introMessage();
+
 		if(P1type == null | P1name == null | P2type == null | P2name== null){createPlayers();}
 		else{createPlayers(P1type, P1name, P2type, P2name);}
 
-		introMessage();
-		
 		this.player1.putShips();
 		pause();
 		System.out.println("");
