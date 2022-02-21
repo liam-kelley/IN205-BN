@@ -18,6 +18,7 @@ import ensta.model.ship.Destroyer;
 import ensta.model.ship.Submarine;
 import ensta.util.ColorUtil;
 import ensta.util.Pair;
+import ensta.view.InputHelper;
 
 public class Game {
 
@@ -40,19 +41,29 @@ public class Game {
 
 	public Game init() {
 		if (!loadSave()) {
-			Board boardP1 = new Board("BoardP1");
-			Board boardP2 = new Board("BoardP2");
-
-			this.player1 = new AIPlayer("Liam", boardP1, boardP2, createDefaultShips());
-			this.player2 = new AIPlayer("Sylvain", boardP2, boardP1, createDefaultShips());
-
-			introMessage();
-			
-			this.player1.putShips();
-			pause();
-			System.out.println("");
-			this.player2.putShips();
-			pause();
+			newGameSequence();
+		}
+		else{
+			System.out.println("Save game data found. Continue saved game? (Y/N)");
+			if (!InputHelper.readYN()){
+				System.out.println("Starting new game...");
+				newGameSequence();
+			}
+			else{System.out.println("Continuing game...");}
+		}
+		return this;
+	}
+	public Game init(String P1type, String P1name, String P2type, String P2name) {
+		if (!loadSave()) {
+			newGameSequence(P1type, P1name, P2type, P2name);
+		}
+		else{
+			System.out.println("Save game data found. Continue saved game? (Y/N)");
+			if (!InputHelper.readYN()){
+				System.out.println("Starting new game...");
+				newGameSequence(P1type, P1name, P2type, P2name);
+			}
+			else{System.out.println("Continuing game...");}
 		}
 		return this;
 	}
@@ -60,6 +71,61 @@ public class Game {
 	/*
 	 * *** Méthodes
 	 */
+	private void newGameSequence(){
+		createPlayers();
+
+		introMessage();
+		
+		this.player1.putShips();
+		pause();
+		System.out.println("");
+		this.player2.putShips();
+		pause();
+	}
+
+	private void newGameSequence(String P1type, String P1name, String P2type, String P2name){
+		createPlayers(P1type, P1name, P2type, P2name);
+
+		introMessage();
+		System.out.println("Test");
+		this.player1.putShips();
+		System.out.println("Test");
+		pause();
+		System.out.println("Test");
+		System.out.println("");
+		System.out.println("Test");
+		this.player2.putShips();
+		System.out.println("Test");
+		pause();
+	}
+
+	private void createPlayers(){
+		Board boardP1 = new Board("BoardP1");
+		Board boardP2 = new Board("BoardP2");
+
+		System.out.println("Entrez les jouers sous forme 'ai Kevin autosetup Pierre'. Exemple validPlayerTypes = { 'ai', 'autosetup', 'default'} ");
+		InputHelper.PlayersInput ply = InputHelper.readPlayers();
+		if(ply.P1type.equals("default")){this.player1 = new Player(ply.P1name, boardP1, boardP2, createDefaultShips());}
+		else if (ply.P1type.equals("autosetup")){this.player1 = new AutoSetupPlayer(ply.P1name, boardP1, boardP2, createDefaultShips());}
+		else if (ply.P1type.equals("ai")){this.player1 = new AIPlayer(ply.P1name, boardP1, boardP2, createDefaultShips());}
+		if(ply.P2type.equals("default")){this.player2 = new Player(ply.P2name, boardP2, boardP1, createDefaultShips());}
+		else if (ply.P2type.equals("autosetup")){this.player2 = new AutoSetupPlayer(ply.P2name, boardP2, boardP1, createDefaultShips());}
+		else if (ply.P2type.equals("ai")){this.player2 = new AIPlayer(ply.P2name, boardP2, boardP1, createDefaultShips());}
+	}
+
+	private void createPlayers(String P1type, String P1name, String P2type, String P2name){
+		Board boardP1 = new Board("BoardP1");
+		Board boardP2 = new Board("BoardP2");
+
+		System.out.println("Players initiated.");
+		if(P1type.equals("default")){this.player1 = new Player(P1name, boardP1, boardP2, createDefaultShips());}
+		else if (P1type.equals("autosetup")){this.player1 = new AutoSetupPlayer(P1name, boardP1, boardP2, createDefaultShips());}
+		else if (P1type.equals("ai")){this.player1 = new AIPlayer(P1name, boardP1, boardP2, createDefaultShips());}
+		if(P2type.equals("default")){this.player2 = new Player(P2name, boardP2, boardP1, createDefaultShips());}
+		else if (P2type.equals("autosetup")){this.player2 = new AutoSetupPlayer(P2name, boardP2, boardP1, createDefaultShips());}
+		else if (P2type.equals("ai")){this.player2 = new AIPlayer(P2name, boardP2, boardP1, createDefaultShips());}
+	}
+
 	private void introMessage(){
 		System.out.println("\n" + "/////////////////////////////////////////////////\n////////  BATAILLE NAVALE - made by Liam ////////\n/////////////////////////////////////////////////\n");
 	}
@@ -69,7 +135,7 @@ public class Game {
 		catch(InterruptedException ex){Thread.currentThread().interrupt();}
 	}
 	
-	public void run() {
+	public boolean run() { //Returns true if player 1 has won
 		Board b1 = player1.getBoard();
 		Board b2 = player2.getBoard();
 		Pair<Hit,Coords> pair; 
@@ -90,7 +156,7 @@ public class Game {
 			System.out.println(makeHitMessage(false /*false = outgoing hit */, pair.coords, pair.hit));
 			pause();
 
-			if (!gameOver) {save();}
+			//if (!gameOver) {save();}  Sauvegardes qu'après le deuxième joueur ai joué.
 			playAgain = checkForPlayAgain(pair.hit);
 
 			if (!gameOver && !playAgain) {
@@ -123,6 +189,7 @@ public class Game {
 
 		SAVE_FILE.delete();
 		System.out.println(String.format("Le joueur %s a gagné!\n\nBravo a lui!!!\n", player1.isLose() ? player2.getName() : player1.getName()));
+		return(player2.isLose());
 	}
 
 	private boolean checkForPlayAgain(Hit hit){ return(hit != Hit.MISS); }
@@ -193,7 +260,7 @@ public class Game {
 			java.io.ObjectInputStream objectinputstream = null;
 			Player[] players = new Player[2];
 			try {
-				java.io.FileInputStream streamIn = new java.io.FileInputStream("G:\\address.ser");
+				java.io.FileInputStream streamIn = new java.io.FileInputStream(SAVE_FILE);
 				objectinputstream = new java.io.ObjectInputStream(streamIn);
 				Player[] readCase = (Player[]) objectinputstream.readObject(); //Should I be doing java lists instead of []?
 				if(objectinputstream != null){

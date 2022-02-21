@@ -30,9 +30,62 @@ public final class InputHelper {
 		public int y;
 	}
 
+	public static class PlayersInput {
+		public String P1name;
+		public String P2name;
+		public String P1type;
+		public String P2type;
+	}
+
 	/*
 	 * ** Méthodes de la classe InputHelper
 	 */
+	public static PlayersInput readPlayers() {
+		PlayersInput ply = new PlayersInput();
+		String[] validPlayerTypes = { "ai", "autosetup", "default"};
+		int donecnt = 0;
+		do {
+			donecnt = 0;
+			try {
+				String[] in = scanner.nextLine().split(" ");
+				if (in.length == 4) {
+					if (Arrays.asList(validPlayerTypes).contains(in[0])) {
+						ply.P1type = in[0];
+						donecnt++;
+					}
+					ply.P1name = in[1];
+					if (Arrays.asList(validPlayerTypes).contains(in[2])) {
+						ply.P2type = in[2];
+						donecnt++;
+					}
+					ply.P2name = in[3];
+				}
+			} catch (Exception e) {}
+			if (donecnt<2) {
+				System.err.println("Format incorrect! Entrez les jouers sous forme 'ai Kevin autosetup Pierre'. validPlayerTypes = { 'ai', 'autosetup', 'default'} ");
+			}
+		} while (donecnt<2 && scanner.hasNextLine());
+
+		return ply;
+	}
+
+	public static Boolean readYN() {
+		Boolean yn = null;
+		boolean done = false;
+		do {
+			try {
+				String scan = scanner.nextLine().toLowerCase();
+				if (scan.equals("y")){yn=true; done = true;}
+				else if(scan.equals("n")){yn=false; done = true;}
+				else{System.err.println("Format incorrect! Entrez sous forme 'Y'");}
+			} catch (Exception e) {
+				System.err.println("Format incorrect! Entrez sous forme 'Y'");
+			}
+		} while (!done && scanner.hasNextLine());
+
+		return yn;
+	}
+
 	public static ShipInput readShipInput() {
 		ShipInput res = new ShipInput();
 		String[] validOrientations = { "north", "south", "east", "west" }; // North, South, East, West
