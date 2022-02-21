@@ -35,7 +35,7 @@
 <artifactId>exec-maven-plugin</artifactId>
 <version>1.4.0</version>
 <configuration>
-<mainClass>ensta.App</mainClass>
+<mainClass>ensta.Main</mainClass>
 </configuration>
 </plugin>
         <plugin>
@@ -66,6 +66,15 @@
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <classpathPrefix>lib/</classpathPrefix>
+                <mainClass>ensta.Main</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>

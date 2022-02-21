@@ -67,15 +67,11 @@ public class Game {
 		else{createPlayers(P1type, P1name, P2type, P2name);}
 
 		introMessage();
-		System.out.println("Test");
+		
 		this.player1.putShips();
-		System.out.println("Test");
 		pause();
-		System.out.println("Test");
 		System.out.println("");
-		System.out.println("Test");
 		this.player2.putShips();
-		System.out.println("Test");
 		pause();
 	}
 
