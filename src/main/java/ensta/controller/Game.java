@@ -213,7 +213,7 @@ public class Game {
 		java.io.ObjectOutputStream oos = null;
 		try {
 			if (!SAVE_FILE.exists()) {
-			SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
+				SAVE_FILE.getAbsoluteFile().getParentFile().mkdirs();
 			}
 			
 			Player[] players = new Player[2];
@@ -239,12 +239,15 @@ public class Game {
 			try {
 				java.io.FileInputStream streamIn = new java.io.FileInputStream(SAVE_FILE);
 				objectinputstream = new java.io.ObjectInputStream(streamIn);
+
 				Player[] readCase = (Player[]) objectinputstream.readObject(); //Should I be doing java lists instead of []?
+				
 				if(objectinputstream != null){
 					objectinputstream.close();
 				} 
 				
 				players = readCase;
+
 				this.player1 = players[0];
 				this.player2 = players[1];
 				return true;

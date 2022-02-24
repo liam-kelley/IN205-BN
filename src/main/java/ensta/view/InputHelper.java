@@ -86,7 +86,7 @@ public final class InputHelper {
 		return yn;
 	}
 
-	public static ShipInput readShipInput() {
+	public static ShipInput readShipInput(int boardSize) {
 		ShipInput res = new ShipInput();
 		String[] validOrientations = { "north", "south", "east", "west" }; // North, South, East, West
 		boolean done = false;
@@ -106,12 +106,16 @@ public final class InputHelper {
 			if (!done) {
 				System.err.println("Format incorrect! Entrez la position sous forme 'A1 north'");
 			}
+			if(res.x<=-1 | res.x>=boardSize | res.y<=-1 | res.y>=boardSize){
+				System.err.println("Position incorrecte! Restez dans votre board. Entrez la position sous forme 'A1'");
+				done=false;
+			}
 		} while (!done && scanner.hasNextLine());
 
 		return res;
 	}
 
-	public static CoordInput readCoordInput() {
+	public static CoordInput readCoordInput(int boardSize) {
 		CoordInput res = new CoordInput();
 		boolean done = false;
 		do {
@@ -123,8 +127,8 @@ public final class InputHelper {
 			} catch (Exception e) {
 				System.err.println("Format incorrect! Entrez la position sous forme 'A1'");
 			}
-			if(res.y<=-1){
-				System.err.println("Format incorrect! La position doit être supérieure à 0. Entrez la position sous forme 'A1'");
+			if(res.x<=-1 | res.x>=boardSize | res.y<=-1 | res.y>=boardSize){
+				System.err.println("Position incorrecte! Restez dans la board de l'adversaire. Entrez la position sous forme 'A1'");
 				done=false;
 			}
 		} while (!done && scanner.hasNextLine());

@@ -52,7 +52,7 @@ public class Player implements Serializable{
 			msg = String.format("placer navire %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
 			System.out.println(msg);
 
-			InputHelper.ShipInput res = InputHelper.readShipInput();
+			InputHelper.ShipInput res = InputHelper.readShipInput(ownBoard.getSize());
 
 			ship.setOrientation(res.orientation); //res a des variables public...
 			coords.setCoords(res.x, res.y-1);
@@ -72,7 +72,7 @@ public class Player implements Serializable{
 		Coords coords;
 		do {
 			System.out.println("\n" + this.name + ", where do you want to hit? (Format: 'A1')");
-			InputHelper.CoordInput hitInput = InputHelper.readCoordInput(); //will catch wrong inputs. But wont check you've already hit somewhere.
+			InputHelper.CoordInput hitInput = InputHelper.readCoordInput(opponentBoard.getSize()); //will catch wrong inputs. But wont check you've already hit somewhere.
 			coords = new Coords(hitInput.x,hitInput.y);
 			if(!ownBoard.hasStruckThere(coords)){ //If you havent struck there already... 
 				hit = this.opponentBoard.boardHitByOpponent(coords); //Strike there! Returns a HIT, which explains if you hit, missed, or if you sank a boat (with its type)
